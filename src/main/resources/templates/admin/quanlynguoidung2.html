@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoàn thiện hồ sơ - GreenFood</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: #f4f6f4;
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #e8ede8;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 8px rgba(0,0,0,.06);
+    }
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #2d7a2d;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-logo span { color: #333; }
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #555;
+      font-size: 0.9rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: #2d7a2d; }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrap {
+      max-width: 620px;
+      margin: 36px auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── HEADER CARD ── */
+    .page-header {
+      background: linear-gradient(135deg, #2d7a2d, #45a045);
+      border-radius: 20px;
+      padding: 28px 30px 24px;
+      color: #fff;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 8px 32px rgba(45,122,45,.25);
+    }
+    .header-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(255,255,255,.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .page-header h1 { font-size: 1.25rem; font-weight: 800; }
+    .page-header p  { font-size: 0.85rem; opacity: .85; margin-top: 4px; line-height: 1.5; }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e8ede8;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .form-section-title {
+      padding: 16px 22px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #2d7a2d;
+      border-bottom: 1px solid #f0f5f0;
+      background: #fafcfa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-section-title i { font-size: 0.9rem; }
+
+    .form-body { padding: 20px 22px; display: grid; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #555;
+    }
+    .form-group label span.req { color: #e53e3e; margin-left: 2px; }
+    .form-group input,
+    .form-group select {
+      height: 44px;
+      border: 1.5px solid #dde8dd;
+      border-radius: 10px;
+      padding: 0 14px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: #1a1a1a;
+      background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #2d7a2d;
+      box-shadow: 0 0 0 3px rgba(45,122,45,.1);
+    }
+    .form-group input::placeholder { color: #bbb; }
+    .form-group .hint {
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    /* ── SUBMIT AREA ── */
+    .submit-area {
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+    .btn-submit {
+      width: 100%;
+      height: 52px;
+      background: linear-gradient(135deg, #2d7a2d, #45a045);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity .2s, transform .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(45,122,45,.3);
+    }
+    .btn-submit:hover { opacity: .92; transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+    .btn-skip {
+      width: 100%;
+      height: 44px;
+      background: transparent;
+      color: #888;
+      border: 1.5px solid #ddd;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-skip:hover { border-color: #aaa; color: #555; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1a1a1a;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s;
+      opacity: 0;
+      z-index: 999;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.success { background: #2d7a2d; }
+    .toast.error   { background: #c53030; }
+
+    /* ── STEP INDICATOR ── */
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ddd;
+      transition: background .2s, width .2s;
+    }
+    .step-dot.active { background: #2d7a2d; width: 24px; border-radius: 4px; }
+
+    @media (max-width: 540px) {
+      .form-row { grid-template-columns: 1fr; }
+      .page-header { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="/" class="nav-logo"><img src="/icon/leaf.png" alt="leaf" style="width:22px;height:22px;object-fit:contain;"> <span>GreenFood</span></a>
+  <a href="/quanlynguoidung1" class="nav-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+</nav>
+
+<!-- MAIN -->
+<div class="page-wrap">
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-icon">📋</div>
+    <div>
+      <h1>Hoàn thiện hồ sơ của bạn</h1>
+      <p>Bổ sung thông tin giúp bạn thanh toán nhanh và nhận hàng chính xác hơn.</p>
+    </div>
+  </div>
+
+  <!-- Form: Thông tin cá nhân -->
+  <div class="form-card">
+    <div class="form-section-title"><i class="fas fa-user"></i> Thông tin cá nhân</div>
+    <div class="form-body">
+      <div class="form-group">
+        <label for="editName">Họ và tên <span class="req">*</span></label>
+        <input type="text" id="editName" placeholder="Nguyễn Văn A" autocomplete="name" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editPhone">Số điện thoại <span class="req">*</span></label>
+          <input type="tel" id="editPhone" placeholder="0901 234 567" autocomplete="tel" />
+        </div>
+        <div class="form-group">
+          <label for="editEmail">Email</label>
+          <input type="email" id="editEmail" placeholder="email@example.com" autocomplete="email" readonly style="background:#f8f8f8; color:#999;" />
+          <span class="hint">Email không thể thay đổi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form: Đổi mật khẩu (Tùy chọn) -->
+  <div class="form-card" style="margin-bottom: 24px;">
+    <div class="form-section-title"><i class="fas fa-lock"></i> Đổi mật khẩu (Tùy chọn)</div>
+    <div class="form-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="oldPassword">Mật khẩu cũ</label>
+          <input type="password" id="oldPassword" placeholder="Nhập mật khẩu hiện tại" />
+        </div>
+        <div class="form-group">
+          <label for="newPassword">Mật khẩu mới</label>
+          <input type="password" id="newPassword" placeholder="Nhập mật khẩu mới" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form: Địa chỉ -->
+  <div class="form-card">
+    <div class="form-section-title"><i class="fas fa-map-marker-alt"></i> Địa chỉ giao hàng</div>
+    <div class="form-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="addrHouseNumber">Số nhà</label>
+          <input type="text" id="addrHouseNumber" placeholder="VD: 12B" />
+        </div>
+        <div class="form-group">
+          <label for="addrStreet">Tên đường</label>
+          <input type="text" id="addrStreet" placeholder="VD: Lê Lợi" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="addrWard">Phường / Xã</label>
+          <input type="text" id="addrWard" placeholder="VD: Phường Bến Nghé" />
+        </div>
+        <div class="form-group">
+          <label for="addrDistrict">Quận / Huyện</label>
+          <input type="text" id="addrDistrict" placeholder="VD: Quận 1" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="addrCity">Tỉnh / Thành phố</label>
+        <select id="addrCity">
+          <option value="">-- Chọn tỉnh / thành phố --</option>
+          <option>TP. Hồ Chí Minh</option>
+          <option>Hà Nội</option>
+          <option>Đà Nẵng</option>
+          <option>Cần Thơ</option>
+          <option>Hải Phòng</option>
+          <option>Bình Dương</option>
+          <option>Đồng Nai</option>
+          <option>An Giang</option>
+          <option>Bà Rịa - Vũng Tàu</option>
+          <option>Bắc Giang</option>
+          <option>Bắc Kạn</option>
+          <option>Bạc Liêu</option>
+          <option>Bắc Ninh</option>
+          <option>Bến Tre</option>
+          <option>Bình Định</option>
+          <option>Bình Phước</option>
+          <option>Bình Thuận</option>
+          <option>Cà Mau</option>
+          <option>Cao Bằng</option>
+          <option>Đắk Lắk</option>
+          <option>Đắk Nông</option>
+          <option>Điện Biên</option>
+          <option>Đồng Tháp</option>
+          <option>Gia Lai</option>
+          <option>Hà Giang</option>
+          <option>Hà Nam</option>
+          <option>Hà Tĩnh</option>
+          <option>Hải Dương</option>
+          <option>Hậu Giang</option>
+          <option>Hòa Bình</option>
+          <option>Hưng Yên</option>
+          <option>Khánh Hòa</option>
+          <option>Kiên Giang</option>
+          <option>Kon Tum</option>
+          <option>Lai Châu</option>
+          <option>Lâm Đồng</option>
+          <option>Lạng Sơn</option>
+          <option>Lào Cai</option>
+          <option>Long An</option>
+          <option>Nam Định</option>
+          <option>Nghệ An</option>
+          <option>Ninh Bình</option>
+          <option>Ninh Thuận</option>
+          <option>Phú Thọ</option>
+          <option>Phú Yên</option>
+          <option>Quảng Bình</option>
+          <option>Quảng Nam</option>
+          <option>Quảng Ngãi</option>
+          <option>Quảng Ninh</option>
+          <option>Quảng Trị</option>
+          <option>Sóc Trăng</option>
+          <option>Sơn La</option>
+          <option>Tây Ninh</option>
+          <option>Thái Bình</option>
+          <option>Thái Nguyên</option>
+          <option>Thanh Hóa</option>
+          <option>Thừa Thiên Huế</option>
+          <option>Tiền Giang</option>
+          <option>Trà Vinh</option>
+          <option>Tuyên Quang</option>
+          <option>Vĩnh Long</option>
+          <option>Vĩnh Phúc</option>
+          <option>Yên Bái</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div class="submit-area">
+    <button class="btn-submit" id="saveProfileBtn">
+      <i class="fas fa-check-circle"></i> Lưu & Hoàn thiện hồ sơ
+    </button>
+    <button class="btn-skip" onclick="location.href='/quanlynguoidung1'">
+      Bỏ qua, làm sau
+    </button>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Kiểm tra đăng nhập và quyền Admin ──
+  const customerId = localStorage.getItem('customerId');
+  if (!customerId) location.href = '/login';
+  // ── Pre-fill từ localStorage & API ──
+
+  // ── Pre-fill từ localStorage & API ──
+  async function loadCurrentInfo() {
+    try {
+      const res = await fetch(`/api/customers/me/profile/${customerId}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      document.getElementById('editName').value  = data.name    || '';
+      document.getElementById('editPhone').value = data.phone   || '';
+      document.getElementById('editEmail').value = data.account || '';
+    } catch (e) {
+      console.warn('Không tải được thông tin:', e);
+      document.getElementById('editName').value = localStorage.getItem('customerName') || '';
+    }
+  }
+  loadCurrentInfo();
+
+  // ── Toast helper ──
+  function showToast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type}`;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  // ── Submit handler ──
+  document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('saveProfileBtn');
+    const name        = document.getElementById('editName').value.trim();
+    const phone       = document.getElementById('editPhone').value.trim();
+    const oldPassword = document.getElementById('oldPassword').value.trim();
+    const newPassword = document.getElementById('newPassword').value.trim();
+
+    const houseNo = document.getElementById('addrHouseNumber').value.trim();
+    const street  = document.getElementById('addrStreet').value.trim();
+    const ward    = document.getElementById('addrWard').value.trim();
+    const district= document.getElementById('addrDistrict').value.trim();
+    const city    = document.getElementById('addrCity').value.trim();
+
+    // Validate bắt buộc
+    if (!name) { showToast('⚠️ Vui lòng nhập họ và tên', 'error'); document.getElementById('editName').focus(); return; }
+    if (!phone) { showToast('⚠️ Vui lòng nhập số điện thoại', 'error'); document.getElementById('editPhone').focus(); return; }
+    
+    if (oldPassword || newPassword) {
+      if (!oldPassword) { showToast('⚠️ Vui lòng nhập mật khẩu cũ để đổi', 'error'); document.getElementById('oldPassword').focus(); return; }
+      if (!newPassword || newPassword.length < 6) { showToast('⚠️ Mật khẩu mới phải có ít nhất 6 ký tự', 'error'); document.getElementById('newPassword').focus(); return; }
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+
+    try {
+      const fullStreet = houseNo ? `${houseNo} ${street}` : street;
+      const payload = {
+        name: name,
+        phone: phone,
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        street: fullStreet,
+        ward: ward,
+        district: district,
+        city: city
+      };
+
+      const res = await fetch(`/api/account/${customerId}/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Cập nhật thất bại');
+      }
+
+      localStorage.setItem('customerName', name);
+      showToast('✅ Cập nhật hồ sơ thành công!', 'success');
+      setTimeout(() => { location.href = '/quanlynguoidung1'; }, 1200);
+
+    } catch (e) {
+      console.error(e);
+      showToast('❌ ' + e.message, 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check-circle"></i> Lưu & Hoàn thiện hồ sơ';
+    }
+  });
+</script>
+
+</body>
+</html>

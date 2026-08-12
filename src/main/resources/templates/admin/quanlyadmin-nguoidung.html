@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GreenFood – Khách hàng</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+    <link rel="stylesheet" th:href="@{/css/quanlyadmin-nguoidung.css}" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="logo"><img src="/icon/leaf.png" alt="leaf" style="width:22px;height:22px;object-fit:contain; margin-right:6px; vertical-align:middle;">GreenFood</div>
+      <ul class="nav-menu">
+        <li>
+          <a th:href="@{/}"><i class="fas fa-store"></i> <span>Cửa hàng</span></a>
+        </li>
+        <li>
+          <a th:href="@{/admin}"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+          <a th:href="@{/admin/products}"><i class="fas fa-box"></i> <span>Sản phẩm</span></a>
+        </li>
+        <li>
+          <a th:href="@{/admin/recipes}"><i class="fas fa-utensils"></i> <span>Công thức</span></a>
+        </li>
+        <li class="active">
+          <a th:href="@{/admin/customers}"><i class="fas fa-users"></i> <span>Khách hàng</span></a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main">
+      <div class="content">
+        <h1 class="page-title">Quản lý khách hàng</h1>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value" th:text="${customers != null ? #lists.size(customers) : 0}">0</div>
+            <div class="stat-label">Tổng khách hàng</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color: #166534;">-</div>
+            <div class="stat-label">Đang hoạt động</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color: #b45309;">-</div>
+            <div class="stat-label">Chờ duyệt</div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-toolbar">
+            <div class="search-input-wrap">
+              <i class="fas fa-search" style="color: #9ca3af;"></i>
+              <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm theo tên..." oninput="filterTable()" />
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Mã KH (ID)</th>
+                <th>Tên khách hàng</th>
+                <th>Số điện thoại</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="customerTableBody">
+              <tr th:if="${customers == null or #lists.isEmpty(customers)}" class="no-results">
+                <td colspan="4" style="text-align: center; color: #6b7280; padding: 20px;">
+                  Không tìm thấy dữ liệu khách hàng nào từ hệ thống.
+                </td>
+              </tr>
+              <tr th:each="customer : ${customers}">
+                <td class="customer-id" th:text="'#KH' + ${customer.id}">#KH1</td>
+                <td class="customer-name" th:text="${customer.name}">Nguyễn Văn A</td>
+                <td th:text="${customer.phone}">0901234567</td>
+                <td>
+                  <div class="action-btns">
+                    <button class="btn-view" th:data-id="${customer.id}" th:data-name="${customer.name}" th:data-phone="${customer.phone}" onclick="openViewModal(this)">
+                      <i class="fas fa-eye"></i> Xem
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <footer class="page-footer">
+        <div class="footer-brand">
+          <strong>Green Food</strong><br />
+          © 2026 Green Food Smart AI Chef
+        </div>
+        <div class="footer-links">
+          <a th:href="@{/privacy}">Privacy Policy</a>
+          <a th:href="@{/account/settings}">Terms of Service</a>
+          <a th:href="@{/account}">Contact Support</a>
+        </div>
+      </footer>
+    </div>
+
+    <div class="modal-overlay" id="viewModal">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">Thông tin chi tiết khách hàng</div>
+          <button class="modal-close" onclick="closeModal('viewModal')">×</button>
+        </div>
+        <div id="viewContent" style="font-size:14px; line-height:2.2; padding: 15px 0;">
+          </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeModal('viewModal')">Đóng lại</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function filterTable() {
+        const input = document.getElementById("searchInput").value.toUpperCase();
+        const table = document.getElementById("customerTableBody");
+        const tr = table.getElementsByTagName("tr");
+
+        for (let i = 0; i < tr.length; i++) {
+          const td = tr[i].getElementsByClassName("customer-name")[0];
+          if (td) {
+            const txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(input) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+
+      function openViewModal(button) {
+        const id = button.getAttribute("data-id");
+        const name = button.getAttribute("data-name");
+        const phone = button.getAttribute("data-phone");
+        
+        document.getElementById('viewContent').innerHTML = `
+          <table style="width:100%; border-collapse:collapse;">
+            <tr style="border-bottom: 1px solid #f1f5f9;"><td style="color:#64748b; width:40%">Mã khách hàng</td><td><strong>#KH${id}</strong></td></tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;"><td style="color:#64748b;">Họ và tên</td><td><strong>${name}</strong></td></tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;"><td style="color:#64748b;">Số điện thoại</td><td>${phone}</td></tr>
+          </table>`;
+        document.getElementById("viewModal").classList.add('open');
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove('open');
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Existing init code if any
+        // Kiểm tra quyền Admin
+        const userId = localStorage.getItem('customerId') || localStorage.getItem('userId');
+        const role = localStorage.getItem('role');
+        if (!userId || role !== 'ADMIN') {
+          alert('Bạn không có quyền truy cập trang quản trị. Vui lòng đăng nhập với tài khoản Admin.');
+          window.location.href = '/login';
+        }
+      });
+    </script>
+  </body>
+</html>

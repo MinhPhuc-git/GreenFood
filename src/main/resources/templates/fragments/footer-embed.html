@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <footer class="gf-site-footer" th:fragment="footer">
+      <div class="footer">
+        <div class="col">
+          <h3 style="display: flex; align-items: center; gap: 8px;">
+            <img src="/icon/leaf.png" alt="leaf" style="width: 24px; height: 24px; object-fit: contain;">
+            Green Food
+          </h3>
+          <p>
+            Mang trải nghiệm chợ nông sản<br />
+            đến tận cửa nhà bạn. Thuần khiết, hữu cơ<br />
+            và luôn tươi mới.
+          </p>
+          <div class="social-icons">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="Instagram" />
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174848.png" alt="Facebook" />
+          </div>
+        </div>
+        <div class="col">
+          <h3>Liên Kết Nhanh</h3>
+          <ul>
+            <li><a th:href="@{/}">Cửa hàng</a></li>
+            <li><a th:href="@{/goiymonan}">Gợi ý món ăn</a></li>
+            <li><a th:href="@{/register}">Đăng ký</a></li>
+            <li><a th:href="@{/login}">Đăng nhập</a></li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Hỗ Trợ</h3>
+          <ul>
+            <li><a th:href="@{/privacy}">Chính Sách Bảo Mật</a></li>
+            <li><a th:href="@{/account/settings}">Điều Khoản Dịch Vụ</a></li>
+            <li><a th:href="@{/history}">Lịch sử mua hàng</a></li>
+          </ul>
+        </div>
+        <div class="col newsletter">
+          <h3>Bản Tin</h3>
+          <p>Nhận công thức và ưu đãi qua email của bạn.</p>
+          <input type="email" placeholder="your@email.com" />
+          <button type="button">Đăng Ký</button>
+        </div>
+      </div>
+      <div class="bottom">©2026 GreenFood. Bảo lưu mọi quyền.</div>
+    </footer>
+  </body>
+</html>

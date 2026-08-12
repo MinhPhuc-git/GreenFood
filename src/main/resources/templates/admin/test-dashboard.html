@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Test</title></head>
+<body>
+  <h1>Test Dashboard</h1>
+  <p>Products: <span th:text="${#lists.size(products)}">0</span></p>
+  <p>Recipes: <span th:text="${#lists.size(recipes)}">0</span></p>
+  <p>Customers: <span th:text="${#lists.size(customers)}">0</span></p>
+  <p>Orders: <span th:text="${#lists.size(orders)}">0</span></p>
+</body>
+</html>

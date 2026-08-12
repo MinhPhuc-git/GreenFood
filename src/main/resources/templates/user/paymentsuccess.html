@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenFood – Thanh toán thành công</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --bg: #f8faf9;
+      --text: #1e293b;
+      --text-sub: #64748b;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .success-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.07);
+      max-width: 520px;
+      width: 100%;
+      padding: 48px 40px;
+      text-align: center;
+      animation: slideUp .5s ease-out;
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(30px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .check-circle {
+      width: 80px; height: 80px;
+      background: var(--green-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      animation: popIn .4s ease-out .2s both;
+    }
+    @keyframes popIn {
+      from { transform: scale(0); }
+      to   { transform: scale(1); }
+    }
+    .check-circle svg {
+      width: 40px; height: 40px;
+      stroke: var(--green);
+      stroke-width: 2.5;
+      fill: none;
+    }
+    .check-circle svg polyline {
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      animation: drawCheck .5s ease-out .6s forwards;
+    }
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--text-sub);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .order-info {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .order-info .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    .order-info .row .label { color: var(--text-sub); }
+    .order-info .row .val   { font-weight: 700; color: var(--text); }
+    .order-info .row.total  { border-top: 1px solid #e2e8f0; padding-top: 12px; margin-top: 4px; }
+    .order-info .row.total .val { color: var(--green); font-size: 18px; }
+
+    .btn-group { display: flex; gap: 12px; }
+    .btn {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #15803d; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid #e2e8f0;
+    }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+    .confetti { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; }
+  </style>
+</head>
+<body>
+
+<canvas class="confetti" id="confettiCanvas"></canvas>
+
+<div class="success-card">
+  <div class="check-circle">
+    <svg viewBox="0 0 24 24"><polyline points="5 13 10 17 19 6"/></svg>
+  </div>
+
+  <h1>Thanh toán thành công!</h1>
+  <p class="subtitle" id="successMsg">Cảm ơn bạn đã mua hàng tại GreenFood. Đơn hàng của bạn đã được ghi nhận và đang được xử lý.</p>
+  <p class="subtitle" id="loyaltyMsg" style="color:var(--green);font-weight:700;margin-top:-12px;display:none;"></p>
+
+  <div class="order-info" id="orderInfo">
+    <div class="row">
+      <span class="label">Mã đơn hàng</span>
+      <span class="val" id="infoOrderId">#---</span>
+    </div>
+    <div class="row">
+      <span class="label">Phương thức</span>
+      <span class="val" id="infoMethod">---</span>
+    </div>
+    <div class="row">
+      <span class="label">Trạng thái</span>
+      <span class="val" id="infoStatus" style="color:var(--green)">---</span>
+    </div>
+    <div class="row">
+      <span class="label">Ngày đặt</span>
+      <span class="val" id="infoDate">---</span>
+    </div>
+    <div class="row total">
+      <span class="label">Tổng thanh toán</span>
+      <span class="val" id="infoTotal">---</span>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <a href="/lichsu" class="btn btn-outline">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+      Lịch sử đơn
+    </a>
+    <a href="/" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Về trang chủ
+    </a>
+  </div>
+</div>
+
+<script src="/js/loyalty-points.js"></script>
+<script>
+  // Read order data from URL params or sessionStorage
+  const params = new URLSearchParams(window.location.search);
+  const orderId       = params.get('orderId')       || sessionStorage.getItem('ps_orderId');
+  const paymentMethod = params.get('paymentMethod')  || sessionStorage.getItem('ps_paymentMethod');
+  const total         = params.get('total')          || sessionStorage.getItem('ps_total');
+  const status        = params.get('status')         || sessionStorage.getItem('ps_status');
+  const orderDate     = params.get('orderDate')      || sessionStorage.getItem('ps_orderDate');
+
+  const fmt = n => Number(n).toLocaleString('vi-VN') + 'đ';
+
+  if (orderId) {
+    document.getElementById('infoOrderId').textContent = '#' + orderId;
+  }
+  if (paymentMethod) {
+    document.getElementById('infoMethod').textContent =
+      paymentMethod === 'BANK_TRANSFER' ? 'Chuyển khoản ngân hàng' : 'Tiền mặt (COD)';
+  }
+  if (status) {
+    document.getElementById('infoStatus').textContent =
+      status === 'SUCCESS' ? 'Đã thanh toán' : 'Đang chờ xử lý';
+  }
+  if (orderDate) {
+    try {
+      const d = new Date(orderDate);
+      document.getElementById('infoDate').textContent = d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN');
+    } catch(e) {
+      document.getElementById('infoDate').textContent = orderDate;
+    }
+  }
+  if (total) {
+    document.getElementById('infoTotal').textContent = fmt(total);
+  }
+
+  const loyaltyMsgEl = document.getElementById('loyaltyMsg');
+  const storedLoyaltyMsg = sessionStorage.getItem('ps_loyaltyMessage');
+  if (storedLoyaltyMsg) {
+    loyaltyMsgEl.textContent = storedLoyaltyMsg;
+    loyaltyMsgEl.style.display = 'block';
+  } else {
+    const customerId = localStorage.getItem('customerId');
+    const earned = parseInt(sessionStorage.getItem('ps_pointsEarned') || '0', 10);
+    if (customerId && window.GreenFoodLoyalty) {
+      GreenFoodLoyalty.refreshLoyaltyPoints(customerId).then(data => {
+        if (!data) return;
+        const totalPts = data.loyaltyPoints;
+        if (earned > 0) {
+          loyaltyMsgEl.textContent = 'Bạn đã nhận được +' + earned
+            + ' điểm thưởng. Tổng điểm hiện tại: ' + totalPts.toLocaleString('vi-VN') + ' điểm.';
+          loyaltyMsgEl.style.display = 'block';
+        }
+      });
+    }
+  }
+
+  // Clean sessionStorage
+  ['ps_orderId','ps_paymentMethod','ps_total','ps_status','ps_orderDate','ps_pointsEarned','ps_totalLoyaltyPoints','ps_loyaltyMessage'].forEach(k => sessionStorage.removeItem(k));
+
+  // Giỏ hàng đã được làm mới ở bước trước khi redirect
+
+  // Cập nhật badge giỏ hàng trên trang này (nếu có)
+  (async function syncCartBadge() {
+    const customerId = localStorage.getItem('customerId');
+    const badges = document.querySelectorAll('.cart-btn span, #cartBadge, .cart-badge');
+    if (!badges.length) return;
+    if (customerId) {
+      try {
+        const res = await fetch(`/api/cart/${customerId}`);
+        if (res.ok) {
+          const cart = await res.json();
+          const total = (cart.listCartItems || []).reduce((sum, item) => sum + item.quantity, 0);
+          badges.forEach(b => b.textContent = total);
+        }
+      } catch(e) {}
+    } else {
+      badges.forEach(b => b.textContent = '0');
+    }
+  })();
+
+  // ═══ Simple confetti animation ═══
+  (function() {
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ['#16a34a','#22c55e','#86efac','#f59e0b','#3b82f6','#ef4444','#a855f7'];
+    const pieces = [];
+    for (let i = 0; i < 120; i++) {
+      pieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        w: Math.random() * 8 + 4,
+        h: Math.random() * 4 + 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vy: Math.random() * 3 + 2,
+        vx: (Math.random() - 0.5) * 2,
+        angle: Math.random() * 360,
+        va: (Math.random() - 0.5) * 6
+      });
+    }
+
+    let frame = 0;
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.y += p.vy;
+        p.x += p.vx;
+        p.angle += p.va;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, 1 - frame / 150);
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      frame++;
+      if (frame < 180) requestAnimationFrame(draw);
+      else { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.style.display = 'none'; }
+    }
+    draw();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/footer_style.css" />
+    <title>Footer Green Food</title>
+  </head>
+  <body>
+    <div class="footer">
+      <div class="col">
+        <h3>Green Food</h3>
+        <p>
+          Mang trải nghiệm chợ nông sản<br />
+          đến tận cửa nhà bạn. Thuần khiết, hữu cơ<br />
+          và luôn tươi mới.
+        </p>
+        <div class="social-icons">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+            alt="Instagram"
+          />
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/174/174848.png"
+            alt="Facebook"
+          />
+        </div>
+      </div>
+
+      <div class="col">
+        <h3>Liên Kết Nhanh</h3>
+        <ul>
+          <li><a href="/">Cửa hàng</a></li>
+          <li><a href="/goiymonan">Gợi ý món ăn</a></li>
+          <li><a href="/register">Đăng ký</a></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3>Hỗ Trợ</h3>
+        <ul>
+          <li><a href="/privacy">Chính Sách Bảo Mật</a></li>
+          <li><a href="/account/settings">Điều Khoản Dịch Vụ</a></li>
+          <li><a href="/history">Lịch sử mua hàng</a></li>
+        </ul>
+      </div>
+
+      <div class="col newsletter">
+        <h3>Bản Tin</h3>
+        <p>Nhận công thức và ưu đãi qua email của bạn.</p>
+        <input type="email" placeholder="your@email.com" />
+        <button type="button">Đăng Ký</button>
+      </div>
+    </div>
+
+    <div class="bottom">
+      ©2026 GreenFood. Bảo lưu mọi quyền. Nguồn gốc địa phương, tầm nhìn toàn cầu.
+    </div>
+
+    <script>
+      function notifyParentHeight() {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage(
+            { height: document.documentElement.scrollHeight + 30 },
+            "*"
+          );
+        }
+      }
+      window.addEventListener("load", notifyParentHeight);
+      window.addEventListener("resize", notifyParentHeight);
+    </script>
+  </body>
+</html>

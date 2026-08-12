@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tài khoản của tôi - GreenFood</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: #f4f6f4;
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #e8ede8;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 8px rgba(0,0,0,.06);
+    }
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #2d7a2d;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-logo span { color: #333; }
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #555;
+      font-size: 0.9rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: #2d7a2d; }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrap {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+    }
+
+    /* ── CARD BASE ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e8ede8;
+      overflow: hidden;
+    }
+
+    /* ── LEFT: USER CARD ── */
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 22px 20px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2d7a2d, #4caf50);
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(45,122,45,.3);
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #1a1a1a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .user-account {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── QUICK LINKS ── */
+    .quick-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .quick-card {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 8px;
+      gap: 6px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .quick-card:hover { background: #f8fcf8; }
+    .quick-card i { font-size: 1.2rem; color: #2d7a2d; }
+    .quick-card span { font-size: 0.76rem; color: #555; font-weight: 500; text-align: center; }
+
+    /* ── PROFILE BOX ── */
+    .profile-box {
+      padding: 20px;
+      background: linear-gradient(135deg, #f0faf0, #e8f5e8);
+    }
+    .profile-box strong { font-size: 0.9rem; color: #2d7a2d; }
+    .profile-box p { font-size: 0.82rem; color: #666; margin: 8px 0 14px; line-height: 1.5; }
+    .btn-continue {
+      background: #2d7a2d;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+      font-family: inherit;
+    }
+    .btn-continue:hover { background: #256025; }
+
+    /* ── RIGHT: PROFILE DETAIL ── */
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 18px 20px 10px;
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      padding: 13px 20px;
+      border-top: 1px solid #f4f4f4;
+      gap: 14px;
+    }
+    .info-row i { width: 18px; text-align: center; color: #2d7a2d; font-size: 0.95rem; flex-shrink: 0; }
+    .info-label { font-size: 0.78rem; color: #aaa; font-weight: 500; }
+    .info-value { font-size: 0.92rem; color: #1a1a1a; font-weight: 600; margin-top: 1px; }
+    .info-text { flex: 1; }
+
+    /* ── MENU LIST ── */
+    .menu-section { margin-top: 20px; }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 20px;
+      border-top: 1px solid #f4f4f4;
+      cursor: pointer;
+      transition: background .15s;
+      text-decoration: none;
+      color: #333;
+    }
+    .menu-item:first-child { border-top: none; }
+    .menu-item:hover { background: #f8fcf8; }
+    .menu-item i:first-child { width: 20px; text-align: center; color: #2d7a2d; font-size: 1rem; }
+    .menu-item span { flex: 1; font-size: 0.9rem; font-weight: 500; }
+    .menu-item .arrow { color: #ccc; font-size: 0.75rem; }
+    .menu-item.logout span { color: #e53e3e; }
+    .menu-item.logout i:first-child { color: #e53e3e; }
+
+    /* ── LOADING SKELETON ── */
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 6px;
+      height: 14px;
+    }
+    @keyframes shimmer { 0%{ background-position: 200% 0; } 100%{ background-position: -200% 0; } }
+
+    /* ── STATUS BADGE ── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+    .status-active { background: #e8f5e8; color: #2d7a2d; }
+    .status-locked { background: #fde8e8; color: #c53030; }
+
+    @media (max-width: 640px) {
+      .page-wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="/" class="nav-logo"><img src="/icon/leaf.png" alt="leaf" style="width:22px;height:22px;object-fit:contain;"> <span>GreenFood</span></a>
+  <a href="/" class="nav-back"><i class="fas fa-arrow-left"></i> Về trang chủ</a>
+</nav>
+
+<!-- MAIN -->
+<div class="page-wrap">
+
+  <!-- LEFT COLUMN -->
+  <div>
+    <!-- User card -->
+    <div class="card">
+      <div class="user-card">
+        <div class="avatar" id="avatarLetter">?</div>
+        <div class="user-info">
+          <div class="user-name" id="displayName"><div class="skeleton" style="width:120px"></div></div>
+          <div class="user-account" id="displayAccount"><div class="skeleton" style="width:160px;margin-top:6px"></div></div>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="quick-links">
+        <div class="quick-card" onclick="location.href='/history'">
+          <i class="fas fa-file-alt"></i>
+          <span>Đơn hàng</span>
+        </div>
+        <div class="quick-card" onclick="location.href='/goiymonan'">
+          <i class="fas fa-robot"></i>
+          <span>AI Chef</span>
+        </div>
+        <div class="quick-card">
+          <i class="fas fa-id-card"></i>
+          <span>Thẻ member</span>
+        </div>
+        <div class="quick-card">
+          <i class="fas fa-percent"></i>
+          <span>Giảm giá</span>
+        </div>
+      </div>
+
+      <!-- Change password box -->
+      <div class="profile-box" id="profileBox">
+        <strong>Thay đổi mật khẩu</strong>
+        <p>Cập nhật mật khẩu để bảo vệ tài khoản của bạn tốt hơn.</p>
+        <button class="btn-continue" onclick="openChangePwd()">Thay đổi ngay</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div>
+    <!-- Profile info -->
+    <div class="card">
+      <div class="section-title">Thông tin tài khoản</div>
+
+      <div class="info-row" style="cursor:pointer;" onclick="location.href='/quanlynguoidung2'" title="Nhấn để chỉnh sửa">
+        <i class="fas fa-user"></i>
+        <div class="info-text">
+          <div class="info-label">Họ và tên <i class="fas fa-pencil-alt" style="font-size:.7rem;color:#aaa;margin-left:4px;"></i></div>
+          <div class="info-value" id="infoName"><div class="skeleton" style="width:140px"></div></div>
+        </div>
+      </div>
+
+      <div class="info-row" style="cursor:default;">
+        <i class="fas fa-envelope"></i>
+        <div class="info-text">
+          <div class="info-label">Email (tài khoản)</div>
+          <div class="info-value" id="infoAccount"><div class="skeleton" style="width:200px"></div></div>
+        </div>
+      </div>
+
+      <div class="info-row" style="cursor:pointer;" onclick="location.href='/quanlynguoidung2'" title="Nhấn để chỉnh sửa">
+        <i class="fas fa-phone"></i>
+        <div class="info-text">
+          <div class="info-label">Số điện thoại <i class="fas fa-pencil-alt" style="font-size:.7rem;color:#aaa;margin-left:4px;"></i></div>
+          <div class="info-value" id="infoPhone"><div class="skeleton" style="width:120px"></div></div>
+        </div>
+      </div>
+
+      <div class="info-row" style="cursor:pointer;" onclick="location.href='/quanlynguoidung2'" title="Nhấn để chỉnh sửa">
+        <i class="fas fa-map-marker-alt"></i>
+        <div class="info-text">
+          <div class="info-label">Địa chỉ giao hàng <i class="fas fa-pencil-alt" style="font-size:.7rem;color:#aaa;margin-left:4px;"></i></div>
+          <div class="info-value" id="infoAddress"><div class="skeleton" style="width:240px"></div></div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <i class="fas fa-circle-check"></i>
+        <div class="info-text">
+          <div class="info-label">Trạng thái tài khoản</div>
+          <div class="info-value" id="infoStatus"><div class="skeleton" style="width:80px"></div></div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <i class="fas fa-calendar"></i>
+        <div class="info-text">
+          <div class="info-label">Ngày tham gia</div>
+          <div class="info-value" id="infoCreatedAt"><div class="skeleton" style="width:160px"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <div class="card menu-section">
+      <a class="menu-item" href="/goiymonan">
+        <i class="fas fa-leaf"></i>
+        <span>GreenFood AI Chef</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </a>
+      <a class="menu-item" href="/quanlynguoidung2">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Sổ địa chỉ</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </a>
+      <a class="menu-item" href="/history">
+        <i class="fas fa-history"></i>
+        <span>Lịch sử mua hàng</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </a>
+      <a class="menu-item" href="/quanlynguoidung3">
+        <i class="fas fa-file-contract"></i>
+        <span>Điều khoản dịch vụ</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </a>
+      <a class="menu-item" href="/chinhsachbaomat">
+        <i class="fas fa-shield-alt"></i>
+        <span>Chính sách bảo mật</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </a>
+      <a class="menu-item logout" href="#" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Đăng xuất</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:20px;padding:32px;width:min(440px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.2);">
+    <h2 style="font-size:1.15rem;font-weight:700;color:#1a1a1a;margin-bottom:4px;">Cập nhật hồ sơ</h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:20px;">Thay đổi thông tin của bạn dưới đây.</p>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label style="font-size:.8rem;font-weight:600;color:#555;">Họ và tên</label>
+        <input id="editName" type="text" placeholder="Nhập họ tên..."
+          style="width:100%;margin-top:6px;padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#2d7a2d'" onblur="this.style.borderColor='#e0e0e0'"></input>
+      </div>
+      <div>
+        <label style="font-size:.8rem;font-weight:600;color:#555;">Số điện thoại</label>
+        <input id="editPhone" type="tel" placeholder="Nhập số điện thoại..."
+          style="width:100%;margin-top:6px;padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#2d7a2d'" onblur="this.style.borderColor='#e0e0e0'"></input>
+      </div>
+
+    </div>
+    <div id="editMsg" style="margin-top:12px;font-size:.83rem;min-height:18px;"></div>
+    <div style="display:flex;gap:12px;margin-top:20px;">
+      <button onclick="closeEdit()" style="flex:1;padding:10px;border:1.5px solid #e0e0e0;border-radius:10px;background:#fff;font-family:inherit;font-size:.9rem;cursor:pointer;font-weight:500;">Hủy</button>
+      <button onclick="saveProfile()" style="flex:2;padding:10px;border:none;border-radius:10px;background:#2d7a2d;color:#fff;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;">Lưu thay đổi</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Kiểm tra đăng nhập – hỗ trợ cả ADMIN và CUSTOMER ──
+  const userId     = localStorage.getItem('customerId') || localStorage.getItem('adminId');
+  const userRole   = localStorage.getItem('role') || 'CUSTOMER';
+  const isAdmin    = userRole === 'ADMIN';
+
+  if (!userId) { location.href = '/login'; }
+
+
+
+  // Hiển thị tạm từ localStorage
+  const cachedName = localStorage.getItem('customerName') || (isAdmin ? 'Admin' : 'Người dùng');
+  document.getElementById('avatarLetter').textContent = cachedName.charAt(0).toUpperCase();
+  document.getElementById('displayName').textContent  = cachedName;
+  document.getElementById('infoName').textContent     = cachedName;
+
+  // Tải hồ sơ từ API mới (hỗ trợ cả admin lẫn customer)
+  async function loadProfile() {
+    try {
+      const res  = await fetch(`/api/user/profile/${userId}`);
+      if (!res.ok) return;
+      const data = await res.json();
+
+      const letter = (data.name || 'U').charAt(0).toUpperCase();
+      document.getElementById('avatarLetter').textContent  = letter;
+      document.getElementById('displayName').textContent   = data.name  || '-';
+      document.getElementById('displayAccount').textContent= data.account || '-';
+      document.getElementById('infoName').textContent      = data.name  || '-';
+      document.getElementById('infoAccount').textContent   = data.account || '-';
+      document.getElementById('infoPhone').textContent     = data.phone  || 'Chưa cập nhật';
+
+      // Địa chỉ (cho phép cả Admin)
+      try {
+        const addrRes = await fetch(`/api/account/${userId}/addresses`);
+        if (addrRes.ok) {
+          const addrData = await addrRes.json();
+          const addresses = addrData.addresses || [];
+          if (addresses.length > 0) {
+            const defaultCa = addresses.find(ca => ca.isDefault) || addresses[0];
+            const addr = defaultCa.address || defaultCa;
+            const parts = [addr.street, addr.ward, addr.district, addr.city].filter(Boolean);
+            document.getElementById('infoAddress').textContent = parts.join(', ') || 'Chưa cập nhật';
+          } else {
+            document.getElementById('infoAddress').innerHTML =
+              `<span style="color:#aaa;font-size:.85rem;">Chưa có — <a href="/quanlynguoidung2" style="color:#2d7a2d;font-weight:600;">Thêm ngay</a></span>`;
+          }
+        }
+      } catch (_) {
+        document.getElementById('infoAddress').textContent = 'Chưa cập nhật';
+      }
+
+
+
+      const isActive = (data.status || '').toLowerCase() === 'active';
+      document.getElementById('infoStatus').innerHTML = `
+        <span class="status-badge ${isActive ? 'status-active' : 'status-locked'}">
+          <i class="fas fa-${isActive ? 'check-circle' : 'lock'}"></i>
+          ${isActive ? 'Đang hoạt động' : 'Bị khóa'}
+        </span>`;
+
+      if (data.createdAt) {
+        const d = new Date(data.createdAt);
+        document.getElementById('infoCreatedAt').textContent =
+          d.toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' });
+      } else {
+        document.getElementById('infoCreatedAt').textContent = 'Không rõ';
+      }
+
+      if (data.name) localStorage.setItem('customerName', data.name);
+    } catch (e) {
+      console.warn('Không thể tải thông tin profile:', e);
+    }
+  }
+  loadProfile();
+
+  // ── Chức năng chỉnh sửa hồ sơ ──
+  function toggleEdit(open) {
+    const modal = document.getElementById('editModal');
+    if (open) {
+      modal.style.display = 'flex';
+      document.getElementById('editName').value  = document.getElementById('infoName').textContent.trim();
+      document.getElementById('editPhone').value = document.getElementById('infoPhone').textContent === 'Chưa cập nhật' ? '' : document.getElementById('infoPhone').textContent.trim();
+      document.getElementById('editMsg').textContent = '';
+    } else {
+      modal.style.display = 'none';
+    }
+  }
+  function closeEdit() { toggleEdit(false); }
+
+  // Đóng khi click ra ngoài
+  document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEdit();
+  });
+
+  async function saveProfile() {
+    const name  = document.getElementById('editName').value.trim();
+    const phone = document.getElementById('editPhone').value.trim();
+    const msg   = document.getElementById('editMsg');
+
+    if (!name) { msg.style.color = '#e53e3e'; msg.textContent = 'Vui lòng nhập họ tên.'; return; }
+
+    const body = { name, phone };
+
+    try {
+      msg.style.color = '#888'; msg.textContent = 'Đang lưu...';
+      const res = await fetch(`/api/user/profile/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error();
+      msg.style.color = '#2d7a2d'; msg.textContent = 'Cập nhật thành công ✔';
+      localStorage.setItem('customerName', name);
+      setTimeout(() => { closeEdit(); loadProfile(); }, 1000);
+    } catch {
+      msg.style.color = '#e53e3e'; msg.textContent = 'Lưu thất bại, vui lòng thử lại.';
+    }
+  }
+
+  // ── Thông dụng đổi mật khẩu ──
+  function openChangePwd() {
+    document.getElementById('pwdModal').style.display = 'flex';
+    document.getElementById('newPwd1').value = '';
+    document.getElementById('newPwd2').value = '';
+    document.getElementById('pwdMsg').textContent = '';
+  }
+  function closeChangePwd() {
+    document.getElementById('pwdModal').style.display = 'none';
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const pm = document.getElementById('pwdModal');
+    if (pm) pm.addEventListener('click', function(e) { if (e.target === this) closeChangePwd(); });
+  });
+
+  async function saveNewPwd() {
+    const pwd1 = document.getElementById('newPwd1').value;
+    const pwd2 = document.getElementById('newPwd2').value;
+    const msg  = document.getElementById('pwdMsg');
+
+    if (!pwd1 || pwd1.length < 6) {
+      msg.style.color = '#e53e3e';
+      msg.textContent = 'Mật khẩu phải có ít nhất 6 ký tự.';
+      return;
+    }
+    if (pwd1 !== pwd2) {
+      msg.style.color = '#e53e3e';
+      msg.textContent = 'Mật khẩu xác nhận không khớp.';
+      return;
+    }
+
+    try {
+      msg.style.color = '#888'; msg.textContent = 'Đang cập nhật...';
+      const res = await fetch(`/api/user/profile/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pwd: pwd1 })
+      });
+      if (!res.ok) throw new Error();
+      msg.style.color = '#2d7a2d';
+      msg.textContent = 'Đổi mật khẩu thành công ✔';
+      setTimeout(() => closeChangePwd(), 1200);
+    } catch {
+      msg.style.color = '#e53e3e';
+      msg.textContent = 'Thất bại, vui lòng thử lại.';
+    }
+  }
+
+  // ── Đăng xuất ──
+  document.getElementById('logoutBtn').addEventListener('click', async function(e) {
+    e.preventDefault();
+    const cid = localStorage.getItem('customerId');
+    if (cid) {
+      try { await fetch(`/api/cart/${cid}/clear`, { method: 'DELETE' }); } catch (_) {}
+    }
+    ['customerId', 'adminId', 'customerName', 'role'].forEach(k => localStorage.removeItem(k));
+    location.href = '/login';
+  });
+</script>
+
+<!-- Change Password Modal -->
+<div id="pwdModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:20px;padding:32px;width:min(420px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.2);">
+    <h2 style="font-size:1.1rem;font-weight:700;color:#1a1a1a;margin-bottom:4px;">Thay đổi mật khẩu</h2>
+    <p style="font-size:.82rem;color:#888;margin-bottom:20px;">Nhập mật khẩu mới của bạn (tối thiểu 6 ký tự).</p>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label style="font-size:.8rem;font-weight:600;color:#555;">Mật khẩu mới</label>
+        <input id="newPwd1" type="password" placeholder="Nhập mật khẩu mới..."
+          style="width:100%;margin-top:6px;padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#2d7a2d'" onblur="this.style.borderColor='#e0e0e0'">
+      </div>
+      <div>
+        <label style="font-size:.8rem;font-weight:600;color:#555;">Xác nhận mật khẩu</label>
+        <input id="newPwd2" type="password" placeholder="Nhập lại mật khẩu..."
+          style="width:100%;margin-top:6px;padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#2d7a2d'" onblur="this.style.borderColor='#e0e0e0'"
+          onkeydown="if(event.key==='Enter') saveNewPwd()">
+      </div>
+    </div>
+    <div id="pwdMsg" style="margin-top:12px;font-size:.83rem;min-height:18px;"></div>
+    <div style="display:flex;gap:12px;margin-top:20px;">
+      <button onclick="closeChangePwd()" style="flex:1;padding:10px;border:1.5px solid #e0e0e0;border-radius:10px;background:#fff;font-family:inherit;font-size:.9rem;cursor:pointer;font-weight:500;">Hủy</button>
+      <button onclick="saveNewPwd()" style="flex:2;padding:10px;border:none;border-radius:10px;background:#2d7a2d;color:#fff;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;">Cập nhật mật khẩu</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

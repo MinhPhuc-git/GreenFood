@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi Tiết Món Ăn - GreenFood</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <!-- Dùng đúng CSS của index để header/footer đồng nhất -->
+  <link rel="stylesheet" href="/css/san-pham.css" />
+  <style>
+    /* ===== CSS RIÊNG TRANG CHI TIẾT MÓN ĂN ===== */
+    :root {
+      --primary: #31f216;
+      --primary-dark: #20c80b;
+      --text-main: #121827;
+      --text-muted: #6c7890;
+      --bg-body: #f2f7f2;
+      --bg-card: #fff;
+      --border-color: #e5efe4;
+    }
+
+    .recipe-page {
+      padding: 40px 0;
+    }
+
+    .recipe-hero {
+      position: relative;
+      width: 100%;
+      height: 450px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .recipe-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+          rgba(15, 23, 42, 0.9) 0%,
+          rgba(15, 23, 42, 0.4) 50%,
+          rgba(15, 23, 42, 0) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 40px;
+      color: white;
+      width: 100%;
+    }
+
+    .recipe-tag {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-content h1 {
+      font-size: 42px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .recipe-meta {
+      display: flex;
+      gap: 24px;
+      font-size: 15px;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    .recipe-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .recipe-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 40px;
+    }
+
+    .recipe-steps h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 30px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      background-color: var(--primary-dark);
+      color: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .step-content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .step-content p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .sidebar-card {
+      background-color: var(--bg-card);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .sidebar-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+    }
+
+    .ingredient-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .ingredient-list li {
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.2s;
+    }
+
+    .ingredient-list li.unchecked {
+      opacity: 0.45;
+    }
+
+    .ingredient-list li.unchecked .ing-name {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .custom-checkbox {
+      width: 20px;
+      height: 20px;
+      background-color: var(--primary);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .ingredient-list li.unchecked .custom-checkbox {
+      background-color: #d1d5db;
+    }
+
+    .custom-checkbox::after {
+      content: "";
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      margin-bottom: 2px;
+    }
+
+    .ingredient-list li.unchecked .custom-checkbox::after {
+      display: none;
+    }
+
+    .add-cart-btn {
+      width: 100%;
+      background-color: var(--primary);
+      color: #052404;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 10px;
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .add-cart-btn:hover {
+      background-color: var(--primary-dark);
+    }
+
+    /* Cart icon trong sidebar */
+    .sidebar-cart-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .recipe-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .recipe-hero {
+        height: 300px;
+      }
+
+      .hero-content h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="site-header"></div>
+
+  <main class="recipe-page container">
+    <section class="recipe-hero" id="recipeHero" style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=80&quot;);
+        ">
+      <div class="hero-content">
+        <span class="recipe-tag" id="recipeTag">Healthy Choice</span>
+        <h1 id="recipeTitle">Salad Ức Gà Áp Chảo Sốt Mè Rang</h1>
+        <div class="recipe-meta" id="recipeMeta">
+          <span>🕒 25 minutes</span>
+          <span>🔥 320 kcal</span>
+          <span>📊 Difficulty: Easy</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="recipe-layout">
+      <section class="recipe-steps">
+        <h2>Các bước chế biến</h2>
+        <div id="recipeStepsContainer"></div>
+      </section>
+
+      <aside class="recipe-sidebar">
+        <div class="sidebar-card">
+          <h3>Nguyên liệu</h3>
+          <ul class="ingredient-list" id="recipeIngredients"></ul>
+          <button class="add-cart-btn" id="addAllIngredientsBtn" onclick="addAllIngredientsToCart()">
+            🛒 Thêm các nguyên liệu đã chọn vào giỏ hàng
+          </button>
+          <div id="cartStatus" style="margin-top:10px;font-size:13px;color:#16a34a;"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const recipeId = urlParams.get('id');
+  if (!recipeId) {
+    document.getElementById('recipeTitle').innerText = 'Không tìm thấy món ăn';
+    console.error('No recipe ID provided');
+    return;
+  }
+  fetch(`/api/recipes/${recipeId}`)
+    .then(res => {
+      if (!res.ok) throw new Error('Recipe not found: ' + res.status);
+      return res.json();
+    })
+    .then(recipe => {
+      // Tiêu đề & tag
+      document.getElementById('recipeTitle').innerText = recipe.name || 'Không có tên';
+      document.getElementById('recipeTag').innerText = recipe.status || 'Công thức';
+
+      // Hero image — luôn lấy từ /img_dishes/{img}.png
+      const heroImgId = recipe.img || recipe.id;
+      if (heroImgId) {
+        document.getElementById('recipeHero').style.backgroundImage = `url('/img_dishes/${heroImgId}.png')`;
+      }
+
+      // Meta (mô tả ngắn)
+      document.getElementById('recipeMeta').innerHTML =
+        `<span>📋 ${recipe.description || 'Không có mô tả'}</span>`;
+
+      // Các bước chế biến: tách từ instructions theo dòng hoặc dấu chấm
+      const instructionsText = recipe.instructions || '';
+      const rawSteps = instructionsText
+        .split(/\n|(?<=\.)\s+(?=[A-ZÁÀẢÃẠĂẮẶẲẴẼÉÈẸẺÊẾỀỆỂỄIÍÌỊỈĨOÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠUÚÙỤỦŨƯỨỪỰỬỮYÝỲỴỶỸĐ])/u)
+        .map(s => s.trim())
+        .filter(s => s.length > 5);
+
+      const stepsToRender = rawSteps.length > 0 ? rawSteps : [instructionsText];
+
+      const stepsHTML = stepsToRender.map((step, i) => `
+        <div class="step-item">
+          <div class="step-number">${i + 1}</div>
+          <div class="step-content">
+            <p>${step}</p>
+          </div>
+        </div>`).join('');
+      document.getElementById('recipeStepsContainer').innerHTML =
+        stepsHTML || '<p>Chưa có hướng dẫn chế biến.</p>';
+
+      // Nguyên liệu: tách theo dấu phẩy hoặc dòng mới, lưu vào biến global
+      const ingredientsText = recipe.ingredients || '';
+      window._recipeIngredients = ingredientsText
+        .split(/,|\n/)
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+
+      const ingredientsHTML = window._recipeIngredients.length > 0
+        ? window._recipeIngredients.map(ing => `
+        <li data-checked="true">
+          <span class="custom-checkbox"></span>
+          <span class="ing-name">${ing}</span>
+        </li>`).join('')
+        : '<li>Chưa có danh sách nguyên liệu.</li>';
+
+      document.getElementById('recipeIngredients').innerHTML = ingredientsHTML;
+
+      // Gắn sự kiện toggle tick/bỏ tick cho từng nguyên liệu
+      document.querySelectorAll('#recipeIngredients li').forEach(li => {
+        li.addEventListener('click', () => {
+          const checked = li.dataset.checked === 'true';
+          li.dataset.checked = checked ? 'false' : 'true';
+          li.classList.toggle('unchecked', !li.dataset.checked || li.dataset.checked === 'false');
+        });
+      });
+
+      // Cập nhật tiêu đề trang
+      document.title = `${recipe.name || 'Chi Tiết Món Ăn'} - GreenFood`;
+    })
+    .catch(err => {
+      console.error('Lỗi tải dữ liệu món ăn:', err);
+      document.getElementById('recipeTitle').innerText = 'Không thể tải thông tin món ăn';
+      document.getElementById('recipeStepsContainer').innerHTML =
+        '<p style="color:red">Lỗi: ' + err.message + '</p>';
+    });
+});
+
+window.addAllIngredientsToCart = async function () {
+  const customerId = localStorage.getItem('customerId');
+  if (!customerId) {
+    alert('Vui lòng đăng nhập để thêm vào giỏ hàng!');
+    window.location.href = '/login';
+    return;
+  }
+
+  const ingredients = window._recipeIngredients || [];
+  if (!ingredients.length) {
+    alert('Không có nguyên liệu để thêm.');
+    return;
+  }
+
+  const btn = document.getElementById('addAllIngredientsBtn');
+  const statusEl = document.getElementById('cartStatus');
+  btn.disabled = true;
+  btn.textContent = '⏳ Đang thêm...';
+  statusEl.textContent = '';
+
+  // Chỉ lấy các nguyên liệu đang được tick
+  const checkedItems = Array.from(
+    document.querySelectorAll('#recipeIngredients li[data-checked="true"] .ing-name')
+  ).map(el => el.textContent.trim()).filter(Boolean);
+
+  if (!checkedItems.length) {
+    btn.disabled = false;
+    btn.innerHTML = '🛒 Thêm các nguyên liệu đã chọn vào giỏ hàng';
+    statusEl.textContent = '⚠️ Vui lòng chọn ít nhất một nguyên liệu.';
+    statusEl.style.color = '#d97706';
+    return;
+  }
+
+  let added = 0, notFound = 0, failed = 0;
+  const notFoundList = [];
+
+  const normalizeStr = (text) => text ? text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d") : "";
+
+  for (const ingName of checkedItems) {
+    try {
+      // Tìm sản phẩm khớp với tên nguyên liệu, lấy nhiều kết quả để lọc
+      const searchRes = await fetch(`/api/products?keyword=${encodeURIComponent(ingName)}&size=30`);
+      if (!searchRes.ok) { failed++; continue; }
+      const page = await searchRes.json();
+      const products = page.content || [];
+
+      if (!products.length) {
+        notFound++;
+        notFoundList.push(ingName);
+        continue;
+      }
+
+      const normalizedIng = normalizeStr(ingName);
+      
+      // 1. Ưu tiên khớp chính xác tên
+      let product = products.find(p => normalizeStr(p.name) === normalizedIng);
+      
+      // 2. Nếu không có, tìm sản phẩm có tên chứa từ khóa nguyên liệu
+      if (!product) {
+        product = products.find(p => normalizeStr(p.name).includes(normalizedIng));
+      }
+      
+      // 3. Nếu vẫn không có, lấy kết quả đầu tiên (thường do khớp description)
+      if (!product) {
+        product = products[0];
+      }
+
+      const cartRes = await fetch(`/api/cart/${customerId}/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: product.id, quantity: 1 })
+      });
+
+      if (cartRes.ok) {
+        added++;
+      } else {
+        failed++;
+      }
+    } catch (e) {
+      failed++;
+    }
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '🛒 Thêm các nguyên liệu đã chọn vào giỏ hàng';
+
+  let msg = '';
+  if (added > 0) msg += `✅ Đã thêm ${added} sản phẩm vào giỏ hàng. `;
+  if (notFound > 0) msg += `⚠️ ${notFound} nguyên liệu chưa có trong cửa hàng (${notFoundList.join(', ')}). `;
+  if (failed > 0) msg += `❌ ${failed} nguyên liệu thêm thất bại.`;
+  statusEl.textContent = msg || 'Hoàn tất.';
+  statusEl.style.color = added > 0 ? '#16a34a' : '#dc2626';
+
+  if (added > 0 && typeof window.updateCartBadge === 'function') {
+    window.updateCartBadge();
+  }
+};
+</script>
+<script src="js/greenfood-images.js" charset="UTF-8"></script>
+<script src="js/product-search.js" charset="UTF-8"></script>
+<script src="js/san-pham.js" charset="UTF-8"></script>
+</body>
+
+</html>

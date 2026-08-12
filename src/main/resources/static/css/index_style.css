@@ -1,0 +1,178 @@
+body {
+  width: 100%;
+  margin: 0;
+}
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.right,
+.middle,
+.left {
+  display: flex;
+  gap: 10px;
+}
+
+.middle {
+  display: flex;
+  gap: 20px;
+}
+
+#header h2 {
+  display: flex;
+  justify-content: center;
+}
+
+#header a {
+  text-decoration: none;
+  color: black;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+}
+
+#header .left img {
+  width: 28px;
+  height: 27px;
+}
+
+#header .right img {
+  width: 30px;
+  height: 28px;
+}
+
+#header .search {
+  background-color: rgba(75, 238, 43, 0.05);
+  border-color: rgba(75, 238, 43, 1);
+  border-radius: 20px;
+  outline: 1px solid rgba(75, 238, 43, 1);
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+#header .search img {
+  height: 13px;
+  width: 13px;
+  padding-left: 10px;
+}
+
+.search input {
+  all: unset;
+  padding-left: 5px;
+}
+
+#header .account {
+  background-color: rgba(75, 238, 43, 1);
+  border-radius: 20px;
+  height: 40px;
+  width: 120px;
+  border: 0;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#header .account:hover,
+#header .cart:hover {
+  cursor: pointer;
+  background-color: rgb(50, 192, 21);
+}
+
+#header .account img {
+  height: 14px;
+  width: 14px;
+  padding-right: 3px;
+}
+
+#header .cart {
+  background-color: rgb(163, 219, 152);
+  border: 0;
+  height: 42px;
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40px;
+}
+
+#header .sales {
+  color: rgba(75, 238, 43, 1);
+}
+
+#header .middle a:hover {
+  color: rgb(50, 192, 21);
+}
+
+#header .cart img {
+  height: 20px;
+  width: 20px;
+}
+
+#content {
+  position: relative;
+  margin: auto;
+  width: 1120px;
+}
+
+#content img {
+  padding-top: 20px;
+  height: 520px;
+  width: 1120px;
+  border-radius: 14px;
+}
+
+.btn-content {
+  position: absolute;
+  bottom: 120px;
+  left: 40px;
+  gap: 5px;
+}
+
+.btn-1 {
+  background-color: rgba(75, 238, 43, 1);
+  font-size: 18px;
+  border-radius: 10px;
+  border: 0;
+  padding: 10px 20px 10px 20px;
+}
+
+.btn-2 {
+  background-color: rgba(150, 142, 142, 0.466);
+  color: white;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 0;
+  padding: 10px 20px 10px 20px;
+}
+
+.btn-1:hover {
+  background-color: rgb(50, 192, 21);
+  cursor: pointer;
+}
+
+.btn-2:hover {
+  background-color: rgb(24, 3, 3);
+  opacity: 90%;
+  cursor: pointer;
+}
+
+.content-text {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  font-size: 65px;
+  color: white;
+}
+
+.content-text p {
+  position: absolute;
+  font-size: 18px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  bottom: 10px;
+}

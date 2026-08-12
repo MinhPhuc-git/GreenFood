@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thông tin đăng nhập</title>
+  <link rel="stylesheet" href="/css/register.css" />
+</head>
+
+<body>
+  <div id="container">
+    <div class="banner">
+      <div class="left">
+        <a href="/" style="text-decoration: none">
+          <h2 style="color: rgba(75, 238, 43, 1)">GreenFood</h2>
+        </a>
+      </div>
+      <div class="right">
+        <a href="/">Cửa hàng</a>
+        <a href="/goiymonan">Công thức</a>
+        <a href="/cart">Giỏ hàng</a>
+        <a href="/login" class="sign-up"> <span class="a-sign-up">Đăng nhập</span></a>
+      </div>
+    </div>
+    <div class="log-wrapper">
+      <div class="log">
+        <div class="log-head">
+          <h1>Đăng ký</h1>
+          <p>Vui lòng nhập thông tin đăng ký</p>
+        </div>
+        <form id="regForm">
+          <div class="log-body">
+            <div class="log-body-username">
+              <label for="regAccount">Tài khoản</label>
+              <input type="text" id="regAccount" placeholder="Gmail" required />
+            </div>
+            <div class="log-body-password">
+              <label for="regPassword">Mật khẩu</label>
+              <input type="password" id="regPassword" placeholder="Password" required />
+            </div>
+            <div class="log-body-confirm-password">
+              <label for="regConfirmPassword">Xác nhận mật khẩu</label>
+              <input type="password" id="regConfirmPassword" placeholder="Confirm password" required />
+            </div>
+            <button type="submit" class="btn-log" id="regBtn">Đăng ký</button>
+          </div>
+        </form>
+        <div class="line">Hoặc đăng ký bằng</div>
+        <div class="btn-option">
+          <button><img src="icon/google.png" alt="" />Google</button>
+          <button><img src="icon/facebook.png" alt="" />Facebook</button>
+        </div>
+        <div class="sign-up">
+          <p>Đã có tài khoản?</p>
+          <a href="/login">Đăng nhập</a>
+        </div>
+      </div>
+    </div>
+    <script>
+      const iframe = document.getElementById("footer-iframe");
+
+      window.addEventListener("message", function (e) {
+        if (e.data && typeof e.data.height === "number") {
+          iframe.style.height = e.data.height + "px";
+        }
+      });
+
+      // Xử lý đăng ký gọi API lưu vào DB
+      document.getElementById("regForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const account = document.getElementById("regAccount").value;
+        const pwd = document.getElementById("regPassword").value;
+        const confirmPwd = document.getElementById("regConfirmPassword").value;
+
+        if (pwd !== confirmPwd) {
+          alert("Mật khẩu xác nhận không khớp!");
+          return;
+        }
+
+        // Tạo tên và sđt ngẫu nhiên để thỏa mãn yêu cầu của DB mà không cần thêm trường trên UI
+        const name = account.split("@")[0] || "User";
+        const phone = "09" + Math.floor(10000000 + Math.random() * 90000000);
+
+        try {
+          const btn = document.getElementById("regBtn");
+          btn.disabled = true;
+          btn.innerText = "Đang xử lý...";
+
+          const res = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ account, pwd, confirmPwd, name, phone })
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            alert("Đăng ký thành công!");
+            window.location.href = "/login";
+          } else {
+            alert("Lỗi: " + (data.error || "Không thể đăng ký"));
+            btn.disabled = false;
+            btn.innerText = "Đăng ký";
+          }
+        } catch (err) {
+          alert("Lỗi kết nối server");
+          btn.disabled = false;
+          btn.innerText = "Đăng ký";
+        }
+      });
+    </script>
+  </div>
+</body>
+
+</html>

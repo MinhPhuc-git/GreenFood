@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý công thức - GreenFood</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link rel="stylesheet" th:href="@{/css/recipe_style.css}" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="logo"><img src="/icon/leaf.png" alt="leaf" style="width:22px;height:22px;object-fit:contain; margin-right:6px; vertical-align:middle;">GreenFood</div>
+      <ul class="nav-menu">
+        <li>
+          <a th:href="@{/}"><i class="fas fa-store"></i> <span>Cửa hàng</span></a>
+        </li>
+        <li>
+          <a th:href="@{/admin}"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+          <a th:href="@{/admin/products}"><i class="fas fa-box"></i> <span>Sản phẩm</span></a>
+        </li>
+        <li class="active">
+          <a th:href="@{/admin/recipes}"><i class="fas fa-utensils"></i> <span>Công thức</span></a>
+        </li>
+        <li>
+          <a th:href="@{/admin/customers}"><i class="fas fa-users"></i> <span>Khách hàng</span></a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main">
+      <header>
+        <h1>Quản lý công thức món ăn</h1>
+      </header>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div>Tổng công thức</div>
+          <div class="stat-value" id="totalRecipes">0</div>
+        </div>
+        <div class="stat-card">
+          <div>Công thức mới</div>
+          <div class="stat-value" id="newRecipes">0</div>
+        </div>
+        <div class="stat-card">
+          <div>Món ăn tiêu biểu</div>
+          <div style="font-weight: 600; margin-top: 8px; color: #166534;">Salad Rau Cải Xanh</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Công thức</th>
+              <th>Mô tả</th>
+              <th>Nguyên liệu</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="loading-row">
+              <td colspan="5" style="text-align: center; color: #6b7280; padding: 20px;">
+                Đang tải dữ liệu công thức món ăn...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="add-form">
+        <h2 id="formTitle">Thêm công thức mới</h2>
+
+        <div class="form-grid">
+          <div>
+            <div class="form-group">
+              <label>Tên công thức</label>
+              <input type="text" id="recipeName" placeholder="Nhập tên công thức" />
+            </div>
+            <div class="form-group">
+              <label>Mô tả ngắn</label>
+              <textarea id="recipeDescription" placeholder="Mô tả ngắn gọn về món ăn này"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <div class="form-group">
+              <label>Thành phần nguyên liệu (YOLO)</label>
+              <textarea id="recipeIngredients" placeholder="VD: Bò thăn, Ớt chuông, Hành tây"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Từ khóa phân loại (Related Keywords)</label>
+              <input type="text" id="recipeKeywords" placeholder="VD: Mặn, Xào, Canh, Lẩu" />
+            </div>
+            <div class="form-group">
+              <label>Các bước thực hiện (Instructions)</label>
+              <textarea id="recipeInstructions" placeholder="VD: Bước 1:... Bước 2:..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Trạng thái</label>
+              <select id="recipeStatus">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Ảnh món ăn</label>
+              <input type="file" id="recipeImage" accept="image/*" />
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-save">Lưu công thức</button>
+      </div>
+    </div>
+
+    <script>
+      const recipeApi = async (url, options = {}) => {
+        let isFormData = options.body instanceof FormData;
+        let headers = isFormData ? {} : { "Content-Type": "application/json" };
+        if (options.headers) {
+          headers = { ...headers, ...options.headers };
+        }
+        
+        const response = await fetch(url, {
+          ...options,
+          headers
+        });
+        if (!response.ok) throw new Error(await response.text() || "API lỗi hệ thống");
+        return response.status === 204 ? null : response.json();
+      };
+
+      let editingRecipeId = null;
+      let loadedRecipes = [];
+
+      function getFormControls() {
+        return {
+          name: document.getElementById("recipeName"),
+          description: document.getElementById("recipeDescription"),
+          ingredients: document.getElementById("recipeIngredients"),
+          keywords: document.getElementById("recipeKeywords"),
+          instructions: document.getElementById("recipeInstructions"),
+          status: document.getElementById("recipeStatus"),
+          image: document.getElementById("recipeImage"),
+          saveBtn: document.querySelector(".btn-save"),
+          formTitle: document.getElementById("formTitle")
+        };
+      }
+
+      async function loadRecipesAdmin() {
+        try {
+          const recipes = await recipeApi("/api/recipes");
+          loadedRecipes = recipes;
+          const tbody = document.querySelector(".table-container tbody");
+          
+          document.getElementById("totalRecipes").textContent = recipes.length;
+          document.getElementById("newRecipes").textContent = recipes.slice(-5).length;
+
+          if (recipes.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#6b7280;">Chưa có công thức món ăn nào.</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = recipes.map(recipe => {
+            const statusClass = (recipe.status && recipe.status.toLowerCase() === 'low stock') ? 'status low-stock' : 'status active';
+            
+            return `
+              <tr>
+                <td><strong>${recipe.name || ""}</strong></td>
+                <td>${recipe.description || ""}</td>
+                <td>${recipe.ingredients || ""}</td>
+                <td>${recipe.instructions || ""}</td>
+                <td>
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="${statusClass}">${recipe.status || "Active"}</span>
+                    <div style="display: flex; gap: 12px;">
+                      <i class="fas fa-edit recipe-edit" data-id="${recipe.id}" style="color:#0369a1; cursor:pointer;" title="Sửa món này"></i>
+                      <i class="fas fa-trash recipe-delete" data-id="${recipe.id}" style="color:#ef4444; cursor:pointer;" title="Xóa món này"></i>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join("");
+
+          tbody.querySelectorAll(".recipe-edit").forEach(btn => {
+            btn.addEventListener("click", () => editRecipeById(Number(btn.dataset.id)));
+          });
+          tbody.querySelectorAll(".recipe-delete").forEach(btn => {
+            btn.addEventListener("click", () => deleteRecipe(Number(btn.dataset.id)));
+          });
+
+        } catch (error) {
+          console.warn("Không tải được danh sách recipes từ REST API", error);
+        }
+      }
+
+
+      function editRecipeById(id) {
+        const recipe = loadedRecipes.find(item => Number(item.id) === Number(id));
+        if (!recipe) return;
+        
+        const controls = getFormControls();
+        editingRecipeId = recipe.id;
+        
+        controls.formTitle.textContent = "Sửa công thức món ăn";
+        controls.name.value = recipe.name || "";
+        controls.description.value = recipe.description || "";
+        controls.ingredients.value = recipe.ingredients || "";
+        controls.keywords.value = recipe.relatedKeywords || "";
+        controls.instructions.value = recipe.instructions || "";
+        controls.status.value = recipe.status || "Active";
+        controls.saveBtn.textContent = "Cập nhật công thức";
+        
+        // Cuộn mượt màn hình xuống form nhập liệu
+        document.querySelector('.add-form').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      async function deleteRecipe(id) {
+        if (!confirm("Bạn có chắc muốn xóa vĩnh viễn công thức này?")) return;
+        try {
+          await recipeApi(`/api/admin/recipes/${id}`, { method: "DELETE" });
+          await loadRecipesAdmin();
+        } catch (err) {
+          alert("Lỗi khi xóa: " + err.message);
+        }
+      }
+
+      async function saveRecipe() {
+        const controls = getFormControls();
+        const nameVal = controls.name.value.trim();
+        
+        if (!nameVal) {
+          alert("Vui lòng nhập tên món ăn/công thức!");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("name", nameVal);
+        formData.append("description", controls.description.value.trim());
+        formData.append("ingredients", controls.ingredients.value.trim());
+        formData.append("instructions", controls.instructions.value.trim());
+        formData.append("relatedKeywords", controls.keywords.value.trim());
+        formData.append("status", controls.status.value);
+        
+        if (controls.image.files.length > 0) {
+            formData.append("imageFile", controls.image.files[0]);
+        }
+
+        const url = editingRecipeId ? `/api/admin/recipes/${editingRecipeId}` : "/api/admin/recipes";
+        const method = editingRecipeId ? "PUT" : "POST";
+
+        try {
+          await recipeApi(url, { method, body: formData });
+          
+          editingRecipeId = null;
+          controls.formTitle.textContent = "Thêm công thức mới";
+          controls.name.value = "";
+          controls.description.value = "";
+          controls.ingredients.value = "";
+          controls.keywords.value = "";
+          controls.instructions.value = "";
+          controls.status.value = "Active";
+          controls.image.value = "";
+          controls.saveBtn.textContent = "Lưu công thức";
+          
+          await loadRecipesAdmin();
+        } catch (err) {
+          alert("Lỗi khi lưu dữ liệu: " + err.message);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const controls = getFormControls();
+        controls.saveBtn.addEventListener("click", saveRecipe);
+        loadRecipesAdmin();
+
+        // Kiểm tra quyền Admin
+        const userId = localStorage.getItem('customerId') || localStorage.getItem('userId');
+        const role = localStorage.getItem('role');
+        if (!userId || role !== 'ADMIN') {
+          alert('Bạn không có quyền truy cập trang quản trị. Vui lòng đăng nhập với tài khoản Admin.');
+          window.location.href = '/login';
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+/* Global design system */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --primary: rgba(75, 238, 43, 1);
+  --primary-light: rgba(75, 238, 43, 0.05);
+  --bg-dark: #1a1a1a;
+  --text-primary: #111;
+  --text-light: #fff;
+}
+
+/* Reset & base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text-primary);
+  background-color: #fff;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(50, 192, 21);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
+}
+
+header .left img,
+header .right img {
+  width: 28px;
+  height: 27px;
+}
+
+header .middle a {
+  margin: 0 .8rem;
+  font-weight: 600;
+}
+
+header .right .account,
+header .right .cart {
+  border-radius: 20px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: #fff;
+}
+
+header .right .account:hover,
+header .right .cart:hover {
+  background: rgb(50, 192, 21);
+  cursor: pointer;
+}

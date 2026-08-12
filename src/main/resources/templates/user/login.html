@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập - GreenFood</title>
+  <link rel="stylesheet" href="/css/login_style.css" />
+</head>
+
+<body>
+  <div id="container">
+    <div class="banner">
+      <div class="left">
+        <a href="/" style="text-decoration: none">
+          <h2 style="color: rgba(75, 238, 43, 1)">GreenFood</h2>
+        </a>
+      </div>
+      <div class="right">
+        <a href="/">Cửa hàng</a>
+        <a href="/goiymonan">Công thức</a>
+        <a href="/cart">Giỏ hàng</a>
+        <a href="/register" class="sign-up">
+          <span class="a-sign-up">Đăng ký</span></a>
+      </div>
+    </div>
+
+    <div class="log-wrapper">
+      <div class="log">
+        <div class="log-head">
+          <h1>Đăng nhập</h1>
+          <p>Vui lòng nhập thông tin đăng nhập</p>
+        </div>
+        <form id="loginForm">
+          <div class="log-body">
+            <div class="log-body-username">
+              <label for="username">Tài khoản</label>
+              <input id="username" name="username" type="text" placeholder="Gmail" required />
+            </div>
+            <div class="log-body-password">
+              <label for="password">Mật khẩu</label>
+              <input id="password" type="password" name="password" placeholder="Password" required />
+            </div>
+            <button class="btn-log" type="submit">Đăng nhập</button>
+          </div>
+        </form>
+        <div class="line">Hoặc đăng nhập bằng</div>
+        <div class="btn-option">
+          <button type="button">
+            <img src="/icon/google.png" alt="">
+            Google
+          </button>
+
+          <button type="button">
+            <img src="/icon/facebook.png" alt="">
+            Facebook
+          </button>
+        </div>
+        <div class="sign-up">
+          <p>Không có tài khoản?</p>
+          <a href="/register">Tạo tài khoản</a>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Kiểm tra nếu admin đã đăng nhập từ trước thì tự động chuyển hướng qua trang admin
+      document.addEventListener("DOMContentLoaded", () => {
+        const role = localStorage.getItem("role");
+        if (role === "ADMIN") {
+          window.location.href = "/admin";
+        }
+      });
+
+      document.getElementById("loginForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const account = document.getElementById("username").value;
+        const pwd = document.getElementById("password").value;
+        try {
+          const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ account, pwd })
+          });
+          const result = await response.json();
+          if (response.ok) {
+            localStorage.setItem("customerId", result.userId);
+            localStorage.setItem("customerName", result.name || result.account);
+            localStorage.setItem("role", result.role); // Lưu role vào localStorage
+
+            if (result.role !== "ADMIN") {
+              try {
+                const ptsRes = await fetch(`/api/customer/${result.userId}/points`);
+                if (ptsRes.ok) {
+                  const pts = await ptsRes.json();
+                  localStorage.setItem("loyaltyPoints", String(pts.loyaltyPoints ?? 0));
+                }
+              } catch (_) { /* bỏ qua */ }
+            }
+
+            // Nếu là ADMIN thì đẩy qua trang admin, ngược lại đẩy về cửa hàng
+            if (result.role === "ADMIN") {
+              window.location.href = "/admin";
+            } else {
+              window.location.href = "/index.html";
+            }
+          } else {
+            alert("Đăng nhập thất bại: " + (result.error || "Thông tin không chính xác"));
+          }
+        } catch (error) {
+          alert("Lỗi kết nối tới máy chủ");
+        }
+      });
+    </script>
+  </div>
+</body>
+
+</html>

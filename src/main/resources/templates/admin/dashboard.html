@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenFood - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="logo"><img src="/icon/leaf.png" alt="leaf"
+        style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:6px;">GreenFood</div>
+    <ul class="nav-menu">
+      <li>
+        <a th:href="@{/}"><i class="fas fa-store"></i> <span>Cửa hàng</span></a>
+      </li>
+      <li class="active">
+        <a th:href="@{/admin}"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+      </li>
+      <li>
+        <a th:href="@{/admin/products}"><i class="fas fa-box"></i> <span>Sản phẩm</span></a>
+      </li>
+      <li>
+        <a th:href="@{/admin/recipes}"><i class="fas fa-utensils"></i> <span>Công thức</span></a>
+      </li>
+      <li>
+        <a th:href="@{/admin/customers}"><i class="fas fa-users"></i> <span>Khách hàng</span></a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="content">
+      <h1 class="page-title">Tổng quan hệ thống</h1>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" th:text="${products != null ? #lists.size(products) : 0}">0</div>
+          <div class="stat-label">Sản phẩm</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" th:text="${recipes != null ? #lists.size(recipes) : 0}">0</div>
+          <div class="stat-label">Công thức</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" th:text="${customers != null ? #lists.size(customers) : 0}">0</div>
+          <div class="stat-label">Khách hàng</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" th:text="${orders != null ? #lists.size(orders) : 0}">0</div>
+          <div class="stat-label">Đơn hàng</div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="table-title"><i class="fas fa-box-open"></i> Sản phẩm gần đây</div>
+          <a class="btn-view-all" th:href="@{/admin/products}">Xem tất cả</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tên sản phẩm</th>
+              <th>Danh mục</th>
+              <th>Giá</th>
+              <th>Tồn kho</th>
+              <th>Đơn vị</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:if="${products == null or #lists.isEmpty(products)}" class="no-results">
+              <td colspan="7">Chưa có sản phẩm</td>
+            </tr>
+            <tr th:each="product, iter : ${products}" th:if="${iter.index < 5}">
+              <td class="row-id" th:text="'#' + ${product.id}">#1</td>
+              <td class="row-name" th:text="${product.name}">Sản phẩm</td>
+              <td>
+                <span class="category-badge"
+                  th:text="${product.category != null ? product.category.name : '—'}">—</span>
+              </td>
+              <td class="price-cell" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0
+                đ</td>
+              <td th:text="${product.stock != null ? product.stock : 0}">0</td>
+              <td th:text="${product.unit != null ? product.unit : '—'}">—</td>
+              <td>
+                <span
+                  th:class="${product.stock == null or product.stock <= 0 ? 'badge badge-inactive' : (product.status == 'low-stock' ? 'badge badge-pending' : 'badge badge-active')}"
+                  th:text="${product.stock == null or product.stock <= 0 ? 'HẾT HÀNG' : (product.status == 'low-stock' ? 'SẮP HẾT' : 'CÒN HÀNG')}">CÒN
+                  HÀNG</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tables-grid">
+        <div class="table-card">
+          <div class="table-toolbar">
+            <div class="table-title"><i class="fas fa-users"></i> Khách hàng mới</div>
+            <a class="btn-view-all" th:href="@{/admin/customers}">Xem tất cả</a>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Mã KH</th>
+                <th>Tên khách hàng</th>
+                <th>Số điện thoại</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${customers == null or #lists.isEmpty(customers)}" class="no-results">
+                <td colspan="3">Chưa có khách hàng</td>
+              </tr>
+              <tr th:each="customer, iter : ${customers}" th:if="${iter.index < 5}">
+                <td class="row-id" th:text="'#KH' + ${customer.id}">#KH1</td>
+                <td class="row-name" th:text="${customer.name}">Khách</td>
+                <td th:text="${customer.phone}">090...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-card">
+          <div class="table-toolbar">
+            <div class="table-title"><i class="fas fa-utensils"></i> Công thức gần đây</div>
+            <a class="btn-view-all" th:href="@{/admin/recipes}">Xem tất cả</a>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên công thức</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${recipes == null or #lists.isEmpty(recipes)}" class="no-results">
+                <td colspan="3">Chưa có công thức</td>
+              </tr>
+              <tr th:each="recipe, iter : ${recipes}" th:if="${iter.index < 5}">
+                <td class="row-id" th:text="'#' + ${recipe.id}">#1</td>
+                <td class="row-name" th:text="${recipe.name}">Công thức</td>
+                <td>
+                  <span class="badge badge-active"
+                    th:text="${recipe.status != null ? recipe.status : 'Active'}">Active</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="table-title"><i class="fas fa-shopping-cart"></i> Đơn hàng gần đây</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Mã ĐH</th>
+              <th>Khách hàng</th>
+              <th>Tổng tiền</th>
+              <th>Địa chỉ</th>
+              <th>Trạng thái</th>
+              <th>Ngày đặt</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:if="${orders == null or #lists.isEmpty(orders)}" class="no-results">
+              <td colspan="6">Chưa có đơn hàng</td>
+            </tr>
+            <tr th:each="order, iter : ${orders}">
+              <td class="row-id" th:text="'#DH' + ${order.id}">#DH1</td>
+              <td class="row-name" th:text="${order.customer != null ? order.customer.name : '—'}">—</td>
+              <td class="price-cell"
+                th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
+              <td class="address-cell" th:text="${order.deliveryAddress != null ? order.deliveryAddress : '—'}">
+              </td>
+              <td>
+                <span
+                  th:class="${order.status == 'SUCCESS' or order.status == 'DELIVERED' ? 'badge badge-active' : (order.status == 'PENDING' ? 'badge badge-pending' : 'badge badge-inactive')}"
+                  th:text="${order.status == 'SUCCESS' ? 'ĐÃ THANH TOÁN' : (order.status == 'DELIVERED' ? 'ĐÃ GIAO' : (order.status == 'PENDING' ? 'CHỜ THU TIỀN' : (order.status == 'CANCELLED' ? 'ĐÃ HỦY' : order.status)))}">CHỜ
+                  XỬ LÝ</span>
+              </td>
+              <td th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm') : '—'}">—
+              </td>
+              <td>
+                <button th:if="${order.status == 'PENDING' and order.paymentMethod == 'CASH'}" class="btn-confirm-cash"
+                  th:attr="onclick=|confirmCash(${order.id})|">
+                  <i class="fas fa-check-circle"></i> Xác nhận thu tiền
+                </button>
+                <button th:if="${order.status != 'CANCELLED'}" class="btn-cancel-admin"
+                  th:attr="onclick=|adminCancel(${order.id})|"
+                  style="background:#ef4444;color:white;border:none;padding:6px 12px;border-radius:6px;font-size:13px;cursor:pointer;margin-left:4px;transition:0.2s;display:inline-flex;align-items:center;gap:5px;">
+                  <i class="fas fa-times-circle"></i> Hủy đơn
+                </button>
+                <span th:if="${order.status == 'CANCELLED'}" class="text-muted">—</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <div class="footer-brand">
+        <strong>Green Food</strong><br />
+        © 2026 Green Food Smart AI Chef
+      </div>
+      <div class="footer-links">
+        <a th:href="@{/privacy}">Privacy Policy</a>
+        <a th:href="@{/account/settings}">Terms of Service</a>
+        <a th:href="@{/account}">Contact Support</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Script kiểm tra quyền truy cập Admin -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const userId = localStorage.getItem('customerId') || localStorage.getItem('userId');
+      const role = localStorage.getItem('role');
+
+      if (!userId || role !== 'ADMIN') {
+        alert('Bạn không có quyền truy cập trang quản trị. Vui lòng đăng nhập với tài khoản Admin.');
+        window.location.href = '/login';
+      }
+    });
+
+    async function confirmCash(orderId) {
+      if (!confirm('Bạn có chắc chắn đã thu tiền mặt cho đơn hàng #' + orderId + ' không?')) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/order/${orderId}/confirm-cash`, {
+          method: 'PUT'
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert('Xác nhận thành công!');
+          location.reload();
+        } else {
+          alert('Lỗi: ' + (data.error || 'Không thể xác nhận'));
+        }
+      } catch (e) {
+        alert('Lỗi kết nối');
+      }
+    }
+
+    async function adminCancel(orderId) {
+      if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng #' + orderId + ' và hoàn trả tồn kho không?')) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/order/admin/${orderId}/cancel`, {
+          method: 'PUT'
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert('Hủy đơn hàng thành công!');
+          location.reload();
+        } else {
+          alert('Lỗi: ' + (data.error || 'Không thể hủy đơn'));
+        }
+      } catch (e) {
+        alert('Lỗi kết nối');
+      }
+    }
+  </script>
+  <style>
+    .btn-confirm-cash {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-confirm-cash:hover {
+      background: #15803d;
+    }
+
+    .text-muted {
+      color: #94a3b8;
+    }
+  </style>
+</body>
+
+</html>
