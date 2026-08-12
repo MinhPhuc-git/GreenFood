@@ -5,7 +5,7 @@
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Roboflow](https://img.shields.io/badge/Roboflow-AI-6A0DAD?style=for-the-badge)
 
-GreenFood is a modern, feature-rich e-commerce web application built with **Spring Boot**, designed specifically for organic food and agricultural products. It integrates cutting-edge **AI capabilities** (via Roboflow) for ingredient detection and seamless payment processing via **VNPAY**.
+GreenFood is a modern, feature-rich e-commerce web application built with **Spring Boot**, designed specifically for organic food and agricultural products. It integrates cutting-edge **AI capabilities** (via Roboflow) for ingredient detection.
 
 ---
 
@@ -13,7 +13,6 @@ GreenFood is a modern, feature-rich e-commerce web application built with **Spri
 
 - **🛒 E-commerce Core**: Complete shopping cart, checkout, and order management.
 - **🤖 AI Ingredient Detection**: Upload food images to automatically detect ingredients using a customized Roboflow model.
-- **💳 Online Payment (VNPAY)**: Secure and fast payment gateway integration.
 - **🎁 Loyalty Program**: Accumulate points, membership tiers, and apply vouchers.
 - **🛡️ Secure Authentication**: JWT-based authentication & authorization.
 - **📊 Admin Dashboard**: Full control over products, users, orders, and analytics.
@@ -24,7 +23,7 @@ GreenFood is a modern, feature-rich e-commerce web application built with **Spri
 - **Database**: MySQL 8.0+
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla), Thymeleaf templates
 - **Build Tool**: Maven
-- **External Services**: Roboflow API (Computer Vision), VNPAY Sandbox (Payments), SMTP (Email Notifications)
+- **External Services**: Roboflow API (Computer Vision), SMTP (Email Notifications)
 
 ## 📁 Project Architecture (Package by Feature)
 
@@ -36,7 +35,7 @@ com.example.GreenFood
 ├── config/      # Security, Database, External APIs configuration
 ├── loyalty/     # Points, Vouchers, Memberships
 ├── model/       # JPA Entities (Entities mapping to database)
-├── order/       # Cart, Checkout, VNPAY, Order History
+├── order/       # Cart, Checkout, Order History
 ├── product/     # Products, Recipes, Reviews, Roboflow AI
 └── user/        # Authentication, Accounts, Profiles, Email
 ```
@@ -59,7 +58,6 @@ com.example.GreenFood
 2. **Configure Database & APIs:**
    Rename `src/main/resources/application.properties.example` to `application.properties` and update the placeholders:
    - MySQL credentials (`spring.datasource.username`, `spring.datasource.password`).
-   - VNPAY Sandbox credentials (`vnpay.tmn-code`, `vnpay.hash-secret`).
    - Roboflow API Key (`roboflow.api-key`).
 
 3. **Database Initialization:**
