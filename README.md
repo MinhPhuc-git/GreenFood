@@ -77,4 +77,3 @@ com.example.GreenFood
    - URL: `http://localhost:8081`
 
 ---
-*Developed with ❤️ by the GreenFood Team.*
